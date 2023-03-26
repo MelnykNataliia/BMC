@@ -3,27 +3,30 @@ package pageobjects.api;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.http.ContentType;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.testng.annotations.BeforeTest;
+
+import static org.hamcrest.Matchers.lessThan;
 
 public class Specifications {
-	public static RequestSpecification requestSpec(String url) {
-		return new RequestSpecBuilder()
-				.setBaseUri(url)
-				.setContentType(ContentType.JSON)
+	@BeforeTest
+	public void setup() {
+		RequestSpecification requestSpecification = new RequestSpecBuilder()
+				.setBaseUri("https://restful-booker.herokuapp.com/")
+				.addHeader("Content-Type", "application/json")
+				.addHeader("Accept", "application/json")
+				.addFilter(new RequestLoggingFilter())
+				.addFilter(new ResponseLoggingFilter())
 				.build();
-	}
 
-	public static ResponseSpecification responseSpecOK200() {
-		return new ResponseSpecBuilder()
-				.expectStatusCode(200)
+		ResponseSpecification responseSpecification = new ResponseSpecBuilder()
+				.expectResponseTime(lessThan(20000L))
 				.build();
-	}
 
-	public static void installSpecification(RequestSpecification request, ResponseSpecification response) {
-		RestAssured.requestSpecification = request;
-		RestAssured.responseSpecification = response;
+		RestAssured.requestSpecification = requestSpecification;
+		RestAssured.responseSpecification = responseSpecification;
 	}
-
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class BookingDates {
-	private String checkin;
-	private String checkout;
+public class PartialBookingData {
+	Integer totalprice;
 }

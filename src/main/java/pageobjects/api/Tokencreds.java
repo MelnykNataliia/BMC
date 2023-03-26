@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class BookingDates {
-	private String checkin;
-	private String checkout;
+public class Tokencreds {
+	private String username;
+	private String password;
 }
